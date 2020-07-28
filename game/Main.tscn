@@ -1,0 +1,122 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://game/Main.gd" type="Script" id=1]
+[ext_resource path="res://game/start.png" type="Texture" id=2]
+
+[sub_resource type="ViewportTexture" id=1]
+viewport_path = NodePath("OutputViewport")
+
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("SimulationViewport")
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+void fragment() {
+	vec4 tile = texture(TEXTURE, UV);
+	vec2 s = TEXTURE_PIXEL_SIZE;
+	
+	float tl = texture(TEXTURE, UV + vec2(-s.x, -s.y)).r;
+	float cl = texture(TEXTURE, UV + vec2(-s.x, 0)).r;
+	float bl = texture(TEXTURE, UV + vec2(-s.x, s.y)).r;
+	
+	float tc = texture(TEXTURE, UV + vec2(0, -s.y)).r;
+	float cc = texture(TEXTURE, UV + vec2(0, 0)).r;
+	float bc = texture(TEXTURE, UV + vec2(0, s.y)).r;
+	
+	float tr = texture(TEXTURE, UV + vec2(s.x, -s.y)).r;
+	float cr = texture(TEXTURE, UV + vec2(s.x, 0)).r;
+	float br = texture(TEXTURE, UV + vec2(s.x, s.y)).r;
+	
+	int count = int(tl) + int(cl) + int(bl) + int(tc) + int(bc) + int(tr) + int(cr) + int(br);
+	
+	// Death
+	if (count < 2 || count > 3)
+		tile = vec4(tile.r - 0.1, 0, 0, 1);
+	
+	// Life
+	if (count == 3)
+		tile = vec4(1, 1, 1, 1);
+	
+	// Stay
+	tile = vec4(tile.r, tile.r, tile.r, 1.0);
+	
+	COLOR = tile;
+}
+"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RenderTexture" type="TextureRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = SubResource( 1 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OutputViewport" type="Viewport" parent="."]
+size = Vector2( 640, 480 )
+disable_3d = true
+usage = 0
+render_target_v_flip = true
+gui_disable_input = true
+
+[node name="OutputTexture" type="TextureRect" parent="OutputViewport"]
+margin_right = 40.0
+margin_bottom = 40.0
+texture = SubResource( 2 )
+
+[node name="SimulationViewport" type="Viewport" parent="."]
+size = Vector2( 640, 480 )
+disable_3d = true
+usage = 0
+render_target_v_flip = true
+gui_disable_input = true
+
+[node name="SimulationTexture" type="TextureRect" parent="SimulationViewport"]
+material = SubResource( 4 )
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonStart" type="Button" parent="HBoxContainer"]
+margin_left = 418.0
+margin_right = 468.0
+margin_bottom = 20.0
+text = "START"
+
+[node name="ButtonPause" type="Button" parent="HBoxContainer"]
+margin_left = 472.0
+margin_right = 525.0
+margin_bottom = 20.0
+text = "PAUSE"
+
+[node name="ButtonNext" type="Button" parent="HBoxContainer"]
+margin_left = 529.0
+margin_right = 606.0
+margin_bottom = 20.0
+text = "NEXT STEP"
+[connection signal="pressed" from="HBoxContainer/ButtonStart" to="." method="_on_ButtonStart_pressed"]
+[connection signal="pressed" from="HBoxContainer/ButtonPause" to="." method="_on_ButtonPause_pressed"]
+[connection signal="pressed" from="HBoxContainer/ButtonNext" to="." method="_on_ButtonNext_pressed"]
