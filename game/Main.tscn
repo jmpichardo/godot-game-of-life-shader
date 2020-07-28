@@ -2,6 +2,7 @@
 
 [ext_resource path="res://game/Main.gd" type="Script" id=1]
 [ext_resource path="res://game/start.png" type="Texture" id=2]
+[ext_resource path="res://game/simulation.shader" type="Shader" id=3]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("OutputViewport")
@@ -9,44 +10,8 @@ viewport_path = NodePath("OutputViewport")
 [sub_resource type="ViewportTexture" id=2]
 viewport_path = NodePath("SimulationViewport")
 
-[sub_resource type="Shader" id=3]
-code = "shader_type canvas_item;
-
-void fragment() {
-	vec4 tile = texture(TEXTURE, UV);
-	vec2 s = TEXTURE_PIXEL_SIZE;
-	
-	float tl = texture(TEXTURE, UV + vec2(-s.x, -s.y)).r;
-	float cl = texture(TEXTURE, UV + vec2(-s.x, 0)).r;
-	float bl = texture(TEXTURE, UV + vec2(-s.x, s.y)).r;
-	
-	float tc = texture(TEXTURE, UV + vec2(0, -s.y)).r;
-	float cc = texture(TEXTURE, UV + vec2(0, 0)).r;
-	float bc = texture(TEXTURE, UV + vec2(0, s.y)).r;
-	
-	float tr = texture(TEXTURE, UV + vec2(s.x, -s.y)).r;
-	float cr = texture(TEXTURE, UV + vec2(s.x, 0)).r;
-	float br = texture(TEXTURE, UV + vec2(s.x, s.y)).r;
-	
-	int count = int(tl) + int(cl) + int(bl) + int(tc) + int(bc) + int(tr) + int(cr) + int(br);
-	
-	// Death
-	if (count < 2 || count > 3)
-		tile = vec4(tile.r - 0.1, 0, 0, 1);
-	
-	// Life
-	if (count == 3)
-		tile = vec4(1, 1, 1, 1);
-	
-	// Stay
-	tile = vec4(tile.r, tile.r, tile.r, 1.0);
-	
-	COLOR = tile;
-}
-"
-
 [sub_resource type="ShaderMaterial" id=4]
-shader = SubResource( 3 )
+shader = ExtResource( 3 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
