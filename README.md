@@ -1,5 +1,5 @@
 # Godot game of life shader
-Cellular automata game of life in Godot running the simulation in the GPU using a shader.
+The Conway's Game of Life cellular automata made in Godot but running the simulation in the GPU using a shader.
 
 This prototype is based on Alan Zucconi's work:
 https://www.alanzucconi.com/2016/03/16/cellular-automata-with-shaders/
@@ -8,7 +8,7 @@ https://www.alanzucconi.com/2016/03/16/cellular-automata-with-shaders/
 
 ## Requirements
 
-The project was made using **Godot 3.2.2**
+The project was made using [**Godot 3.2.2 - Standard version**](https://godotengine.org/), you will need to have at least version 3.1 or higher to open, edit and run this project.
 
 ## How it works
 
