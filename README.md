@@ -19,4 +19,5 @@ After that, the *OutputViewport* gets *SimulationViewport*'s output and *Simulat
 
 ![Scene](https://i.imgur.com/fhrf0A0.png)
 
-![Pipeline](https://i.imgur.com/9jUHud0.png)
+![Pipeline](https://i.imgur.com/T601aHZ.png)
+
